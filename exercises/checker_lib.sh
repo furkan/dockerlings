@@ -86,10 +86,10 @@ check_web_endpoint() {
 # --- Generic Cleanup ---
 # Scripts can add resource names to these arrays for automatic cleanup on exit.
 
-declare -a CONTAINERS_TO_CLEAN
-declare -a IMAGES_TO_CLEAN
-declare -a NETWORKS_TO_CLEAN
-declare -a COMPOSE_PROJECTS_TO_CLEAN
+declare -a CONTAINERS_TO_CLEAN=("${CONTAINERS_TO_CLEAN[@]:-}")
+declare -a IMAGES_TO_CLEAN=("${IMAGES_TO_CLEAN[@]:-}")
+declare -a NETWORKS_TO_CLEAN=("${NETWORKS_TO_CLEAN[@]:-}")
+declare -a COMPOSE_PROJECTS_TO_CLEAN=("${COMPOSE_PROJECTS_TO_CLEAN[@]:-}")
 
 cleanup() {
   log_info "Cleaning up resources..."

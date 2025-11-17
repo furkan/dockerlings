@@ -463,12 +463,15 @@ func (m model) runCheck() tea.Cmd {
 
 		root, err := util.GetProjectRoot()
 		if err != nil {
-			log.Fatalf("Error finding project root: %v", err)
+			log.Printf("Error finding project root: %v", err)
+			return checkResultMsg{success: false, id: cur.ID}
 		}
 
-		script := filepath.Join(root, "exercises", cur.ID, "check.sh")
+		exerciseDir := filepath.Join(root, "exercises", cur.ID)
+		script := filepath.Join(exerciseDir, "check.sh")
+
 		cmd := exec.Command("/bin/bash", script)
-		cmd.Dir = filepath.Join("exercises", cur.ID)
+		cmd.Dir = exerciseDir // ← THIS IS THE FIX
 
 		err = cmd.Run()
 		return checkResultMsg{success: err == nil, id: cur.ID}

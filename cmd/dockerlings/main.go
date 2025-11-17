@@ -41,7 +41,7 @@ var checkCmd = &cobra.Command{
 		}
 
 		command := exec.Command("/bin/bash", scriptPath)
-		command.Dir = filepath.Join("exercises", exerciseID)
+		command.Dir = exerciseDir
 
 		err = command.Run()
 		if err != nil {
