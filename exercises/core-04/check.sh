@@ -13,9 +13,9 @@ log_info "Verifying content by running a fresh Nginx container..."
 docker run -d --name $CHECKER_CONTAINER_NAME nginx >/dev/null
 sleep 1
 EXPECTED_CONTENT=$(docker exec $CHECKER_CONTAINER_NAME nginx -v 2>&1)
-EXPECTED_VERSION=$(echo "$EXPECTED_CONTENT" | grep -oP 'nginx version: nginx/\d+.\d+.\d+' || echo "")
+EXPECTED_VERSION=$(echo "$EXPECTED_CONTENT" | grep -E -o 'nginx version: nginx/[0-9]+\.[0-9]+\.[0-9]+' || echo "")
 ACTUAL_CONTENT=$(cat "$USER_FILE")
-ACTUAL_VERSION=$(echo "$ACTUAL_CONTENT" | grep -oP 'nginx version: nginx/\d+.\d+.\d+' || echo "")
+ACTUAL_VERSION=$(echo "$ACTUAL_CONTENT" | grep -E -o 'nginx version: nginx/[0-9]+\.[0-9]+\.[0-9]+' || echo "")
 if [ "$ACTUAL_VERSION" == "$EXPECTED_VERSION" ] && [ -n "$EXPECTED_VERSION" ]; then
   log_success "The file '$USER_FILE' exists and contains the correct Nginx version info."
   rm -f "$USER_FILE"
