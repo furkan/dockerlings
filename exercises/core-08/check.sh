@@ -36,7 +36,7 @@ docker run -d \
   --name $CHECKER_CONTAINER_NAME \
   -e POSTGRES_PASSWORD=mysecretpassword \
   -v "$VOLUME_DIR_HOST_ABSOLUTE":"$VOLUME_DIR_CONTAINER" \
-  postgres >/dev/null
+  postgres:16 >/dev/null
 
 wait_for_postgres "$CHECKER_CONTAINER_NAME"
 

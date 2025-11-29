@@ -11,7 +11,7 @@ Your task is to create a persistent PostgreSQL database. You will run a containe
     mkdir pgdata
     ```
 
-2.  **Run a `postgres` container**. Name it `c8-postgres` and use a volume to mount your `pgdata` directory to the container's data directory (`/var/lib/postgresql/data`).
+2.  **Run a `postgres:16` container**. Name it `c8-postgres` and use a volume to mount your `pgdata` directory to the container's data directory (`/var/lib/postgresql/data`).
     *(Wait 15-20 seconds for the database to initialize the first time).*
 
 3.  **Create a table** using `docker exec` to run the `psql` client inside the container. The table should be named `dvd_rentals`.

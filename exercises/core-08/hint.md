@@ -12,7 +12,7 @@ Follow this sequence of commands to set up the persistent database.
       --name c8-postgres \
       -e POSTGRES_PASSWORD=mysecretpassword \
       -v "$(pwd)/pgdata":/var/lib/postgresql/data \
-      postgres
+      postgres:16
     ```
     *(Wait about 20 seconds for the database to initialize. Check its status with `docker logs c8-postgres`.)*
 
@@ -42,7 +42,7 @@ Follow this sequence of commands to set up the persistent database.
       --name c8-postgres \
       -e POSTGRES_PASSWORD=mysecretpassword \
       -v "$(pwd)/pgdata":/var/lib/postgresql/data \
-      postgres
+      postgres:16
     ```
     *(Wait a few moments for it to start.)*
 
