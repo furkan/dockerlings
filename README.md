@@ -3,7 +3,7 @@
 
 ---
 
-![dockerlings demo](https://github.com/user-attachments/assets/81e1e86f-2e94-4ef3-8922-d9166263967d)
+[![asciicast](https://asciinema.org/a/758902.svg)](https://asciinema.org/a/758902)
 
 ---
 
