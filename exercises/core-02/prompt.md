@@ -6,4 +6,3 @@ Pull and run the official `nginx` image, expose port 80, and verify you can acce
 2. Name the container `my-nginx`.
 3. Map host port `8080` to container port `80`.
 4. Use `curl http://localhost:8080` to verify it's working.
-
