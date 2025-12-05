@@ -75,3 +75,15 @@ id = "core-13"
 title = "Multi-Service Compose"
 track = "core"
 depends_on = "core-12"
+
+[[exercises]]
+id = "core-14"
+title = "Multi-Service Compose /w volumes & networks"
+track = "core"
+depends_on = "core-13"
+
+[[exercises]]
+id = "core-15"
+title = "Multi-Stage build"
+track = "core"
+depends_on = "core-14"
