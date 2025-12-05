@@ -28,9 +28,11 @@ EXPOSE 8080
 CMD ["/server"]
 EOF
 )
-if ! echo "$NAIVE_DOCKERFILE_CONTENT" | docker build -t "$NAIVE_IMAGE_NAME" -; then
+echo "$NAIVE_DOCKERFILE_CONTENT" > ./temp-dockerfile
+if ! docker build -t "$NAIVE_IMAGE_NAME" -f temp-dockerfile .; then
   log_fail "Failed to build the naive comparison image." "This is an issue with the checker script."
 fi
+rm temp-dockerfile
 
 log_info "Comparing image sizes..."
 USER_SIZE=$(docker inspect --format='{{.Size}}' "$USER_IMAGE_NAME")
