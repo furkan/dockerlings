@@ -1,6 +1,8 @@
 # Dockerlings
 **Learn Docker by doing – the fun, interactive way**
 
+[discord](https://discord.gg/4hUbVHG7we)
+
 ---
 
 [![asciicast](https://asciinema.org/a/758902.svg)](https://asciinema.org/a/758902)
