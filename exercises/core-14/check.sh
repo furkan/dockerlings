@@ -32,6 +32,9 @@ for name in "$WEB_CONTAINER_NAME" "$REDIS_CONTAINER_NAME"; do
   assert_container_running "$name"
 done
 
+log_info "Waiting for web app to connect to Redis..."
+sleep 3
+
 log_info "Verifying services are on the custom network..."
 for name in "$WEB_CONTAINER_NAME" "$REDIS_CONTAINER_NAME"; do
   # This inspect command checks if the container is attached to our specific network
