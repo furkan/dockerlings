@@ -1,17 +1,15 @@
 Directory: exercises/core-08
 
-Containers are ephemeral, meaning any changes made inside them are lost when they are removed. For applications like databases, the data must persist. This exercise demonstrates how **volumes** solve this by linking a directory on your host machine to a directory inside the container.
+Containers are ephemeral, meaning any changes made inside them are lost when they are removed. For applications like databases, the data must persist. This exercise demonstrates how **volumes** solve this by having Docker create a volume it manages and lets you use with the container, ensuring data persistence even if the container is removed.
 
 ## Your Task
 
 Your task is to create a persistent PostgreSQL database. You will run a container, add data to it, remove the container, and then verify that the data is still safe on your host machine.
 
-1.  **Create a directory** on your host machine named `pgdata`. This directory will hold your database files.
-    ```bash
-    mkdir pgdata
-    ```
+1.  **Create a volume** on your host machine, via Docker, named `pgdata`. This volume will be created and managed by Docker and will hold your database files.
+    `docker volume create pgdata`
 
-2.  **Run a `postgres:16` container**. Name it `c8-postgres` and use a volume to mount your `pgdata` directory to the container's data directory (`/var/lib/postgresql/data`).
+2.  **Run a `postgres:16` container**. Name it `c8-postgres` and use the volume Docker created (`pgdata`) to mount to the container's data directory (`/var/lib/postgresql/data`).
     *(Wait 15-20 seconds for the database to initialize the first time).*
 
 3.  **Create a table** using `docker exec` to run the `psql` client inside the container. The table should be named `dvd_rentals`.
