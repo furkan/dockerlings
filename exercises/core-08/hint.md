@@ -1,17 +1,15 @@
 Follow this sequence of commands to set up the persistent database.
 
 1.  **Create the host directory:**
-    ```bash
-    mkdir pgdata
-    ```
+    `docker volume create pgdata`
 
 2.  **Run the first container instance:**
-    The `-v "$(pwd)/pgdata:/var/lib/postgresql/data"` flag maps your new local directory into the container.
+    The `-v pgdata:/var/lib/postgresql/data` flag maps your new volume into the container.
     ```bash
     docker run -d \
       --name c8-postgres \
       -e POSTGRES_PASSWORD=mysecretpassword \
-      -v "$(pwd)/pgdata":/var/lib/postgresql/data \
+      -v pgdata:/var/lib/postgresql/data \
       postgres:16
     ```
     *(Wait about 20 seconds for the database to initialize. Check its status with `docker logs c8-postgres`.)*
