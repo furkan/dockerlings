@@ -39,7 +39,7 @@ Follow this sequence of commands to set up the persistent database.
     docker run -d \
       --name c8-postgres \
       -e POSTGRES_PASSWORD=mysecretpassword \
-      -v "$(pwd)/pgdata":/var/lib/postgresql/data \
+      -v pgdata:/var/lib/postgresql/data \
       postgres:16
     ```
     *(Wait a few moments for it to start.)*
