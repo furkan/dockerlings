@@ -2,8 +2,8 @@
 set -euo pipefail
 source ../checker_lib.sh
 
-VOLUME_DIR_HOST_ABSOLUTE="$(pwd)/pgdata"
-VOLUME_DIR_CONTAINER="/var/lib/postgresql/data"
+VOLUME_NAME="pgdata"
+CONTAINER_DATA_PATH="/var/lib/postgresql/data"
 CHECKER_CONTAINER_NAME="c8-checker-postgres"
 TABLE_NAME="dvd_rentals"
 EXPECTED_ROW_CONTENT="The Grand Budapest Hotel"
@@ -25,27 +25,30 @@ wait_for_postgres() {
   log_fail "Database in '$container_name' did not become ready in time."
 }
 
-log_info "Checking for 'pgdata' directory..."
-if [ ! -d "$VOLUME_DIR_HOST_ABSOLUTE" ]; then
-  log_fail "The 'pgdata' directory was not found." "Did you create the directory with 'mkdir pgdata' before running the container?"
+log_info "Checking if Docker volume '$VOLUME_NAME' exists..."
+if ! docker volume inspect "$VOLUME_NAME" >/dev/null 2>&1; then
+  log_fail "The Docker volume '$VOLUME_NAME' was not found." "Did you create it using 'docker volume create $VOLUME_NAME'?"
 fi
-log_success "'pgdata' directory found."
+log_success "Volume '$VOLUME_NAME' found."
 
-log_info "Starting a checker container on the same 'pgdata' directory..."
+log_info "Starting a checker container using the '$VOLUME_NAME' volume..."
+# We run a fresh container attached to the user's volume to verify persistence
 docker run -d \
-  --name $CHECKER_CONTAINER_NAME \
+  --name "$CHECKER_CONTAINER_NAME" \
   -e POSTGRES_PASSWORD=mysecretpassword \
-  -v "$VOLUME_DIR_HOST_ABSOLUTE":"$VOLUME_DIR_CONTAINER" \
+  -v "$VOLUME_NAME":"$CONTAINER_DATA_PATH" \
   postgres:16 >/dev/null
 
 wait_for_postgres "$CHECKER_CONTAINER_NAME"
 
-log_info "Verifying that the correct data has persisted..."
+log_info "Verifying data persistence inside the volume..."
 QUERY="SELECT title FROM $TABLE_NAME WHERE title = '$EXPECTED_ROW_CONTENT';"
-OUTPUT=$(docker exec "$CHECKER_CONTAINER_NAME" psql -U postgres -tA -c "$QUERY")
+OUTPUT=$(docker exec "$CHECKER_CONTAINER_NAME" psql -U postgres -tA -c "$QUERY" 2>/dev/null || echo "QUERY_FAILED")
 
 if [ "$OUTPUT" == "$EXPECTED_ROW_CONTENT" ]; then
-  log_success "The database row was found in the new container. The volume worked!"
+  log_success "The database row was found in the checker container. The named volume is working correctly!"
+elif [ "$OUTPUT" == "QUERY_FAILED" ]; then
+  log_fail "Could not query the database." "Ensure the table '$TABLE_NAME' was created correctly inside the container."
 else
-  log_fail "The expected database row was not found." "Did you run the 'CREATE TABLE' and 'INSERT' commands exactly as specified in the hint?"
+  log_fail "The expected database row was not found." "Expected: '$EXPECTED_ROW_CONTENT', Got: '$OUTPUT'"
 fi
