@@ -55,7 +55,9 @@ fi
 
 log_info "Performing persistence test..."
 log_info "Accessing web app to increment counter to 1..."
-RESPONSE_1=$(curl -s http://localhost:$HOST_PORT)
+if ! RESPONSE_1=$(curl -sS "http://localhost:$HOST_PORT"); then
+  log_fail "Could not reach the web app on port $HOST_PORT." "Check the port mapping in '$COMPOSE_FILE' and inspect the logs with 'docker compose logs web'."
+fi
 if ! echo "$RESPONSE_1" | grep -q "visited 1 times"; then
   log_fail "The web app did not return the expected first visit message. Response was: '$RESPONSE_1'" "Is the web app connected to Redis? Check the logs with 'docker compose logs web'."
 fi
@@ -69,7 +71,9 @@ docker compose up -d
 sleep 3 # Give app time to start
 
 log_info "Accessing web app again to check for persisted count..."
-RESPONSE_2=$(curl -s http://localhost:$HOST_PORT)
+if ! RESPONSE_2=$(curl -sS "http://localhost:$HOST_PORT"); then
+  log_fail "Could not reach the web app on port $HOST_PORT after restart." "Check the port mapping in '$COMPOSE_FILE' and inspect the logs with 'docker compose logs web'."
+fi
 if ! echo "$RESPONSE_2" | grep -q "visited 2 times"; then
   log_fail "The visit counter did not persist. Response was: '$RESPONSE_2'" "This indicates the named volume is not working correctly. Expected counter to be 2."
 fi
