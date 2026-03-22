@@ -30,13 +30,17 @@ log_info "Waiting for web app to connect to Redis..."
 sleep 3
 
 log_info "Checking web app functionality..."
-RESPONSE_1=$(curl -s http://localhost:$HOST_PORT)
+if ! RESPONSE_1=$(curl -sS "http://localhost:$HOST_PORT"); then
+  log_fail "Could not reach the web app on port $HOST_PORT." "Check the port mapping in '$COMPOSE_FILE' and inspect the logs with 'docker compose logs web'."
+fi
 if ! echo "$RESPONSE_1" | grep -q "visited 1 times"; then
   log_fail "The web app did not return the expected first visit message. Response was: '$RESPONSE_1'" "Is the web app connected to Redis? Check the logs with 'docker compose logs web'."
 fi
 log_success "First visit successful."
 
-RESPONSE_2=$(curl -s http://localhost:$HOST_PORT)
+if ! RESPONSE_2=$(curl -sS "http://localhost:$HOST_PORT"); then
+  log_fail "Could not reach the web app on port $HOST_PORT after the first request." "Check the container logs with 'docker compose logs web' and confirm the service is still running."
+fi
 if ! echo "$RESPONSE_2" | grep -q "visited 2 times"; then
   log_fail "The web app did not return the expected second visit message. Response was: '$RESPONSE_2'" "This indicates a problem with the Redis connection or data persistence."
 fi
