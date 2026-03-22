@@ -15,14 +15,14 @@ Follow this sequence of commands to set up the persistent database.
     *(Wait about 20 seconds for the database to initialize. Check its status with `docker logs c8-postgres`.)*
 
 3.  **Create a table inside the database:**
-    Use `docker exec` to run the `psql` command as the default `postgres` user.
+    Use `docker exec` to run the `psql` command as the default `postgres` user and connect explicitly to the default `postgres` database.
     ```bash
-    docker exec c8-postgres psql -U postgres -c "CREATE TABLE dvd_rentals (title TEXT);"
+    docker exec c8-postgres psql -U postgres -d postgres -c "CREATE TABLE dvd_rentals (title TEXT);"
     ```
 
 4.  **Insert the specific row of data:**
     ```bash
-    docker exec c8-postgres psql -U postgres -c "INSERT INTO dvd_rentals (title) VALUES ('The Grand Budapest Hotel');"
+    docker exec c8-postgres psql -U postgres -d postgres -c "INSERT INTO dvd_rentals (title) VALUES ('The Grand Budapest Hotel');"
     ```
 
 ---
@@ -46,5 +46,5 @@ Follow this sequence of commands to set up the persistent database.
 
 3.  **Check if your data is still there:**
     ```bash
-    docker exec c8-postgres psql -U postgres -c "SELECT * FROM dvd_rentals;"
+    docker exec c8-postgres psql -U postgres -d postgres -c "SELECT * FROM dvd_rentals;"
     ```
