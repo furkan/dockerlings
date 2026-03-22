@@ -35,8 +35,8 @@
 ```bash
 git clone https://github.com/furkan/dockerlings.git
 cd dockerlings
-go build -o bin/dockerlings ./cmd/dockerlings
-./bin/dockerlings watch
+go build -o bin/dockerlings$(go env GOEXE) ./cmd/dockerlings
+./bin/dockerlings$(go env GOEXE) watch
 ```
 
 Use ↑↓ to navigate • c to check your solution • h for hints • q to quit
