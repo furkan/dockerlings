@@ -1,7 +1,10 @@
 # Dockerlings
 **Learn Docker by doing – the fun, interactive way**
 
-[discord](https://discord.gg/4hUbVHG7we)
+> Need help with Docker?
+> 
+> I help teams containerize applications, improve development environments and CI/CD pipelines, and troubleshoot Docker deployments.
+Available for consulting and training → furkanaldemir@gmail.com
 
 ---
 
