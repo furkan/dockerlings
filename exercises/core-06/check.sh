@@ -29,6 +29,12 @@ if ! docker inspect --format='{{.Config.Env}}' "$IMAGE_NAME" | grep -q "PORT=$EX
 fi
 log_success "ENV variable is correct."
 
+log_info "Checking for 'EXPOSE $EXPECTED_PORT'..."
+if ! docker inspect --format='{{json .Config.ExposedPorts}}' "$IMAGE_NAME" | grep -Fq "\"$EXPECTED_PORT/tcp\""; then
+  log_fail "Port $EXPECTED_PORT is not exposed in the image metadata." "Did you add 'EXPOSE $EXPECTED_PORT' to your Dockerfile?"
+fi
+log_success "EXPOSE instruction found."
+
 log_info "Running the container..."
 docker run -d --name "$CONTAINER_NAME" -p "$HOST_PORT":"$EXPECTED_PORT" "$IMAGE_NAME" >/dev/null
 
