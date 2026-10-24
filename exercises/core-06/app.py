@@ -10,8 +10,7 @@ def hello_world():
 
 
 if __name__ == "__main__":
-    # Read the port from the PORT environment variable.
-    # Default to 5000 if it's not set.
-    port = int(os.environ.get("PORT", 5000))
+    # Read the required PORT environment variable.
+    port = int(os.environ["PORT"])
     # Run the app, listening on all interfaces
     app.run(host="0.0.0.0", port=port)
