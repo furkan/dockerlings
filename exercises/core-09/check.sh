@@ -40,5 +40,3 @@ if curl -s --fail http://localhost:$HOST_PORT | grep -q "<h1>Version 2 - Modifie
 else
   log_fail "The change to 'app/index.html' was not reflected by the container." "Did you correctly map the local './app' directory to '/usr/share/nginx/html' in the container?"
 fi
-
-cleanup_file
