@@ -23,11 +23,10 @@ trap cleanup_file EXIT INT TERM
 assert_container_running "$USER_CONTAINER_NAME"
 
 log_info "Inspecting the container for the correct read-only bind mount..."
-MOUNT_INFO=$(docker inspect --format='{{range .Mounts}}{{.Source}}:{{.Destination}}:{{.RW}}{{end}}' "$USER_CONTAINER_NAME")
-EXPECTED_MOUNT_RO="$HOST_APP_DIR_ABSOLUTE:$CONTAINER_APP_DIR:false"
+MOUNT_INFO=$(docker inspect --format='{{range .Mounts}}{{if eq .Destination "/usr/share/nginx/html"}}{{.Type}}:{{.RW}}{{end}}{{end}}' "$USER_CONTAINER_NAME")
 
-if ! echo "$MOUNT_INFO" | grep -qFx "$EXPECTED_MOUNT_RO"; then
-  log_fail "The bind mount is incorrect or not read-only." "Expected: -v \"$HOST_APP_DIR_ABSOLUTE:$CONTAINER_APP_DIR:ro\""
+if [[ "$MOUNT_INFO" != "bind:false" ]]; then
+  log_fail "The bind mount is incorrect or not read-only." "Expected a read-only bind mount at '$CONTAINER_APP_DIR'."
 fi
 log_success "Bind mount is correct and read-only."
 
@@ -41,5 +40,3 @@ if curl -s --fail http://localhost:$HOST_PORT | grep -q "<h1>Version 2 - Modifie
 else
   log_fail "The change to 'app/index.html' was not reflected by the container." "Did you correctly map the local './app' directory to '/usr/share/nginx/html' in the container?"
 fi
-
-cleanup_file
